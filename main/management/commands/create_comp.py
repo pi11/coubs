@@ -24,7 +24,7 @@ class Command(BaseCommand):
         with open(f"{settings.BASE_DIR}/tmp/files.txt", "w+") as f:
             for coub in Coub.objects.filter(
                 is_compilation_used=False, is_downloaded=True
-            )[:40]:
+            )[:200]:
                 f.write(f"file '{coub.tmp_file}'\n")
                 coub.is_compilation_used = True
                 coub.save()
