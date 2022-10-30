@@ -48,11 +48,14 @@ class Command(BaseCommand):
                 if not comp.file:
                     print("No file found, skiping")
                 else:
-                    message = context.bot.send_video(
-                        timeout=30,
-                        chat_id=settings.CHAT_NAME,
-                        video=open(comp.file, "rb"),
-                    )
+                    try:
+                        message = context.bot.send_video(
+                            timeout=30,
+                            chat_id=settings.CHAT_NAME,
+                            video=open(comp.file, "rb"),
+                        )
+                    except FileNotFoundError:
+                        print("No compilation found, skiping..")
                 comp.is_tg_uploaded = True
                 comp.save()
 
