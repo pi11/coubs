@@ -50,7 +50,7 @@ class Command(BaseCommand):
                     chat_id=settings.CHAT_NAME,
                     video=open(coub.tmp_file, "rb"),
                 )
-                coub.is_tg_posted = True
+                coub.is_tg_uploaded = True
                 coub.save()
 
         updater = Updater(settings.TG_TOKEN)
