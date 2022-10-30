@@ -44,8 +44,8 @@ class Command(BaseCommand):
             except IndexError:
                 print("No more to post for now...")
             else:
-                print(f"Posting to group: {comp.tmp_file}")
-                if not comp.tmp_file:
+                print(f"Posting to group: {comp.file}")
+                if not comp.file:
                     print("No file found, skiping")
                 else:
                     message = context.bot.send_video(
