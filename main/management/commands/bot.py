@@ -15,7 +15,7 @@ from datetime import datetime
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 
-from main.models import Coub
+from main.models import Compilation
 
 
 class Command(BaseCommand):
