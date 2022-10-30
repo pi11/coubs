@@ -40,7 +40,7 @@ class Command(BaseCommand):
         def post_group(context):
             """Post coub to group"""
             try:
-                coub = Coub.objects.filter(is_tg_uploaded=False)[0]
+                comp = Compilation.objects.filter(is_tg_uploaded=False)[0]
             except IndexError:
                 print("No more to post for now...")
             else:
@@ -51,10 +51,10 @@ class Command(BaseCommand):
                     message = context.bot.send_video(
                         timeout=30,
                         chat_id=settings.CHAT_NAME,
-                        video=open(coub.tmp_file, "rb"),
+                        video=open(comp.file, "rb"),
                     )
-                coub.is_tg_uploaded = True
-                coub.save()
+                comp.is_tg_uploaded = True
+                comp.save()
 
         updater = Updater(settings.TG_TOKEN)
         jq = updater.job_queue
