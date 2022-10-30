@@ -37,7 +37,6 @@ class Command(BaseCommand):
             """Log Errors caused by Updates."""
             logger.warning('Update "%s" caused error "%s"', update, error)
 
-
         def post_group(context):
             """Post coub to group"""
             try:
@@ -53,11 +52,10 @@ class Command(BaseCommand):
                 )
                 coub.is_tg_posted = True
                 coub.save()
-            
 
         updater = Updater(settings.TG_TOKEN)
         jq = updater.job_queue
-        d_job = jq.run_repeating(post_group, interval=60, first=3)
+        d_job = jq.run_repeating(post_group, interval=settings.POST_INTERVAL, first=3)
 
         dp = updater.dispatcher
         dp.add_handler(CommandHandler("start", help))
