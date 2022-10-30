@@ -31,7 +31,7 @@ class Command(BaseCommand):
             return local_filename
 
         base_urls = [
-            "https://coub.com/api/v2/timeline/explore/random?order_by=&type=&scope=all&page=",
+            "https://coub.com/api/v2/timeline/explore/random?order_by=top&type=&scope=all&page=",
             "https://coub.com/api/v2/timeline/subscriptions/monthly?page=",
         ]
         for base_url in base_urls:
