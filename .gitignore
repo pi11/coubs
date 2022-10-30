@@ -131,3 +131,6 @@ dmypy.json
 db.sqlite3
 tmp/
 local_settings.py
+media/
+comp/
+
