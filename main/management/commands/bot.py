@@ -45,11 +45,14 @@ class Command(BaseCommand):
                 print("No more to post for now...")
             else:
                 print(f"Posting to group: {coub.tmp_file}")
-                message = context.bot.send_video(
-                    timeout=30,
-                    chat_id=settings.CHAT_NAME,
-                    video=open(coub.tmp_file, "rb"),
-                )
+                if not coub.tmp_file:
+                    print("No file found, skiping")
+                else:
+                    message = context.bot.send_video(
+                        timeout=30,
+                        chat_id=settings.CHAT_NAME,
+                        video=open(coub.tmp_file, "rb"),
+                    )
                 coub.is_tg_uploaded = True
                 coub.save()
 
