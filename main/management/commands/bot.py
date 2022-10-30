@@ -40,7 +40,7 @@ class Command(BaseCommand):
         def post_group(context):
             """Post coub to group"""
             try:
-                coub = Coub.objects.filter(is_tg_posted=False)[0]
+                coub = Coub.objects.filter(is_tg_uploaded=False)[0]
             except IndexError:
                 print("No more to post for now...")
             else:
