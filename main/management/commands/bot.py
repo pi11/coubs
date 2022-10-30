@@ -38,14 +38,14 @@ class Command(BaseCommand):
             logger.warning('Update "%s" caused error "%s"', update, error)
 
         def post_group(context):
-            """Post coub to group"""
+            """Post compilation to group"""
             try:
                 comp = Compilation.objects.filter(is_tg_uploaded=False)[0]
             except IndexError:
                 print("No more to post for now...")
             else:
-                print(f"Posting to group: {coub.tmp_file}")
-                if not coub.tmp_file:
+                print(f"Posting to group: {comp.tmp_file}")
+                if not comp.tmp_file:
                     print("No file found, skiping")
                 else:
                     message = context.bot.send_video(
