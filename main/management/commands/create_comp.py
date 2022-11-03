@@ -37,11 +37,16 @@ class Command(BaseCommand):
             if query.count() < 180:
                 print("Not enough videos")
                 sys.exit()
-                
-            for coub in query[:180]:
+
+            max_duration = 30 * 60
+            total_duration = 0
+            for coub in query:
+                total_duration += coub.duration
                 f.write(f"file '{coub.tmp_file}'\n")
                 coub.is_compilation_used = True
                 coub.save()
+                if total_duration >= max_duration:
+                    break # keep compilations short enough
 
         comp = Compilation()
         comp.save()
