@@ -22,7 +22,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for c in Coub.objects.filter(duration=0):
-            info = get_video_info(c.tmp_file)
+            try:
+                info = get_video_info(c.tmp_file)
+            except IndexError: # file missing
+                c.delete()
+                continue
             c.w = info["size"][0]
             c.h = info["size"][1]
             c.duration = info["duration"]
