@@ -22,9 +22,23 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         with open(f"{settings.BASE_DIR}/tmp/files.txt", "w+") as f:
-            for coub in Coub.objects.filter(
-                is_compilation_used=False, is_downloaded=True
-            )[:200]:
+            sizes = {}
+            for c in Coub.objects.filter(is_compilation_used=False):
+                size = f"{c.w}x{c.h}"
+                if size not in sizes:
+                    sizes[size] = 1
+                else:
+                    sizes[size] += 1
+            max_s = (max(sizes, key=sizes.get)).split("x")
+
+            query = Coub.objects.filter(
+                is_compilation_used=False, is_downloaded=True, w=max_s[0], h=max_s[1]
+            )
+            if query.count() < 180:
+                print("Not enough videos")
+                sys.exit()
+                
+            for coub in query[:180]:
                 f.write(f"file '{coub.tmp_file}'\n")
                 coub.is_compilation_used = True
                 coub.save()

@@ -29,6 +29,12 @@ class Command(BaseCommand):
             else:
                 sizes[size] += 1
         print(sizes)
+
+        # max_s = (max(sizes, key=sizes.get))
+        # print(max_s)
+        #for s, v in sizes.items():
+        #    if s == max_s:
+        #        print(s)
         # for c in Coub.objects.filter(duration=0):
         #     try:
         #         info = get_video_info(c.tmp_file)
