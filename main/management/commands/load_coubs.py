@@ -31,11 +31,16 @@ class Command(BaseCommand):
             return local_filename
 
         base_urls = [
-            "https://coub.com/api/v2/timeline/explore/random?order_by=top&type=&scope=all&page=",
-            "https://coub.com/api/v2/timeline/subscriptions/monthly?page=",
+            "https://coub.com/api/v2/timeline/tag/funny?order_by=likes_count&type=&scope=all&page="
+            "https://coub.com/api/v2/timeline/tag/fails?order_by=likes_count&type=&scope=all&page="
+            "https://coub.com/api/v2/timeline/tag/fun?order_by=likes_count&type=&scope=all&page="
+            "https://coub.com/api/v2/timeline/tag/lol?order_by=likes_count&type=&scope=all&page="
+            "https://coub.com/api/v2/timeline/tag/epic?order_by=likes_count&type=&scope=all&page="
+            "https://coub.com/api/v2/timeline/tag/comedy?order_by=likes_count&type=&scope=all&page="
+            
         ]
         for base_url in base_urls:
-            for p in range(1, 30):
+            for p in range(1, 150):
                 data = requests.get(f"{base_url}{p}")
                 for coub in data.json()["coubs"]:
                     i = coub["id"]
