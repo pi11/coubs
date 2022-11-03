@@ -31,22 +31,25 @@ class Command(BaseCommand):
             return local_filename
 
         base_urls = [
-            "https://coub.com/api/v2/timeline/tag/funny?order_by=likes_count&type=&scope=all&page="
-            "https://coub.com/api/v2/timeline/tag/fails?order_by=likes_count&type=&scope=all&page="
-            "https://coub.com/api/v2/timeline/tag/fun?order_by=likes_count&type=&scope=all&page="
-            "https://coub.com/api/v2/timeline/tag/lol?order_by=likes_count&type=&scope=all&page="
-            "https://coub.com/api/v2/timeline/tag/epic?order_by=likes_count&type=&scope=all&page="
-            "https://coub.com/api/v2/timeline/tag/comedy?order_by=likes_count&type=&scope=all&page="
+            "https://coub.com/api/v2/timeline/tag/funny?order_by=likes_count&type=&scope=all&page=",
+            "https://coub.com/api/v2/timeline/tag/fails?order_by=likes_count&type=&scope=all&page=",
+            "https://coub.com/api/v2/timeline/tag/fun?order_by=likes_count&type=&scope=all&page=",
+            "https://coub.com/api/v2/timeline/tag/lol?order_by=likes_count&type=&scope=all&page=",
+            "https://coub.com/api/v2/timeline/tag/epic?order_by=likes_count&type=&scope=all&page=",
+            "https://coub.com/api/v2/timeline/tag/comedy?order_by=likes_count&type=&scope=all&page=",
             "https://coub.com/api/v2/timeline/subscriptions/monthly?page="
             
         ]
         for base_url in base_urls:
             for p in range(1, 150):
-                data = requests.get(f"{base_url}{p}")
+                url = f"{base_url}{p}"
+                print(f"Loading {url}")
+                data = requests.get(url)
                 for coub in data.json()["coubs"]:
                     i = coub["id"]
                     new_coub, is_new = Coub.objects.get_or_create(pk=i)
                     if is_new:
+                        print(f"Loading new one... id#{i}")
                         try:
                             mp4_url = coub["file_versions"]["html5"]["video"]["higher"]["url"]
                             mp3_url = coub["file_versions"]["html5"]["audio"]["med"]["url"]
@@ -79,3 +82,6 @@ class Command(BaseCommand):
                                 new_coub.save()
                             os.remove(result_mp4_file)
                             os.remove(result_mp3_file)
+                    else:
+                        print("Skiping old")
+                            
