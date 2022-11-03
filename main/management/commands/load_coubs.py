@@ -48,4 +48,8 @@ class Command(BaseCommand):
                             if result_file:
                                 new_coub.is_downloaded = True
                                 new_coub.tmp_file = result_file
+                                info = get_video_info(result_file)
+                                new_coub.w = info["size"][0]
+                                new_coub.h = info["size"][1]
+                                new_coub.duration = info["duration"]
                                 new_coub.save()

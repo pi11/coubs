@@ -6,7 +6,10 @@ class Coub(models.Model):
     is_downloaded = models.BooleanField(default=False)
     is_tg_uploaded = models.BooleanField(default=False)
     is_compilation_used = models.BooleanField(default=False)
-
+    w = models.IntegerField(default=0)
+    h = models.IntegerField(default=0)
+    duration = models.IntegerField(default=0)
+    
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):

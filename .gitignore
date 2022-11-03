@@ -133,4 +133,4 @@ tmp/
 local_settings.py
 media/
 comp/
-
+compilations/
