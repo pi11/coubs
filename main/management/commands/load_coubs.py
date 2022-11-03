@@ -41,13 +41,18 @@ class Command(BaseCommand):
                     i = coub["id"]
                     new_coub, is_new = Coub.objects.get_or_create(pk=i)
                     if is_new:
-                        mp4_url = coub["file_versions"]["html5"]["video"]["higher"]["url"]
+                        try:
+                            mp4_url = coub["file_versions"]["html5"]["video"]["higher"]["url"]
+                            mp3_url = coub["file_versions"]["html5"]["audio"]["med"]["url"]
+                        except KeyError:
+                            print("Looks like no audio, skipping")
+                            continue
+                        
                         if mp4_url:
                             print(f"Downloading {mp4_url}")
                             result_mp4_file = download_file(mp4_url, i, "mp4")
                             
                         print("Download mp3")
-                        mp3_url = coub["file_versions"]["html5"]["audio"]["med"]["url"]
                         if mp3_url:
                             print(f"Downloading {mp3_url}")
                             result_mp3_file = download_file(mp3_url, i, "mp3")
