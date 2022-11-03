@@ -37,6 +37,7 @@ class Command(BaseCommand):
             "https://coub.com/api/v2/timeline/tag/lol?order_by=likes_count&type=&scope=all&page="
             "https://coub.com/api/v2/timeline/tag/epic?order_by=likes_count&type=&scope=all&page="
             "https://coub.com/api/v2/timeline/tag/comedy?order_by=likes_count&type=&scope=all&page="
+            "https://coub.com/api/v2/timeline/subscriptions/monthly?page="
             
         ]
         for base_url in base_urls:
