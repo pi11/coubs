@@ -40,7 +40,7 @@ class Command(BaseCommand):
 
             max_duration = 30 * 60
             total_duration = 0
-            for coub in query:
+            for coub in query.order_by("?"):
                 total_duration += coub.duration
                 f.write(f"file '{coub.tmp_file}'\n")
                 coub.is_compilation_used = True
