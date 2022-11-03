@@ -9,7 +9,7 @@ from django.conf import settings
 from django.db.models import Q
 
 from main.models import Coub
-
+from helpers.misc import get_video_info, run_shell_command
 
 class Command(BaseCommand):
     help = """Parse imgur"""
@@ -20,9 +20,9 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        def download_file(url, i):
+        def download_file(url, i, j):
             r = requests.get(url, stream=True)
-            local_filename = f"{settings.BASE_DIR}/tmp/{i}.mp4"
+            local_filename = f"{settings.BASE_DIR}/tmp/{i}-{j}.mp4"
 
             with open(local_filename, "wb") as f:
                 for chunk in r.iter_content(chunk_size=1024):
@@ -41,10 +41,23 @@ class Command(BaseCommand):
                     i = coub["id"]
                     new_coub, is_new = Coub.objects.get_or_create(pk=i)
                     if is_new:
-                        file_url = coub["file_versions"]["share"]["default"]
-                        if file_url:
-                            print(f"Downloading {file_url}")
-                            result_file = download_file(file_url, i)
+                        mp4_url = coub["file_versions"]["html5"]["video"]["higher"]["url"]
+                        if mp4_url:
+                            print(f"Downloading {mp4_url}")
+                            result_mp4_file = download_file(mp4_url, i, "mp4")
+                            
+                        print("Download mp3")
+                        mp3_url = coub["file_versions"]["html5"]["audio"]["med"]["url"]
+                        if mp3_url:
+                            print(f"Downloading {mp3_url}")
+                            result_mp3_file = download_file(mp3_url, i, "mp3")
+                        if result_mp4_file and result_mp3_file:
+                            result_file = f"{settings.BASE_DIR}/tmp/{i}-result.mp4"
+                            print(f"Concat video + audio to {result_file}")
+                            command = f"ffmpeg -i {result_mp4_file} -i {result_mp3_file} -c copy -map 0:v:0 -map 1:a:0 -shortest {result_file}"
+                            
+                            run_shell_command(command, "Error merging video+audio")
+                            
                             if result_file:
                                 new_coub.is_downloaded = True
                                 new_coub.tmp_file = result_file
@@ -53,3 +66,5 @@ class Command(BaseCommand):
                                 new_coub.h = info["size"][1]
                                 new_coub.duration = info["duration"]
                                 new_coub.save()
+                            os.remove(result_mp4_file)
+                            os.remove(result_mp3_file)

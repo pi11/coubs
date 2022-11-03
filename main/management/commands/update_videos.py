@@ -21,15 +21,23 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        for c in Coub.objects.filter(duration=0):
-            try:
-                info = get_video_info(c.tmp_file)
-            except IndexError: # file missing
-                c.delete()
-                continue
-            c.w = info["size"][0]
-            c.h = info["size"][1]
-            c.duration = info["duration"]
-            c.is_compilation_used = False
-            c.save()
-            print(c.w, c.h)
+        sizes = {}
+        for c in Coub.objects.filter():
+            size = f"{c.w}x{c.h}"
+            if size not in sizes:
+                sizes[size] = 1
+            else:
+                sizes[size] += 1
+        print(sizes)
+        # for c in Coub.objects.filter(duration=0):
+        #     try:
+        #         info = get_video_info(c.tmp_file)
+        #     except IndexError: # file missing
+        #         c.delete()
+        #         continue
+        #     c.w = info["size"][0]
+        #     c.h = info["size"][1]
+        #     c.duration = info["duration"]
+        #     c.is_compilation_used = False
+        #     c.save()
+        #     print(c.w, c.h)
