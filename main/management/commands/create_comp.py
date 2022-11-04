@@ -44,7 +44,7 @@ class Command(BaseCommand):
             for coub in query.order_by("?"):
                 bad_coub = False
                 if os.path.exists(coub.tmp_file):
-                    for t in coub.tags:
+                    for t in coub.tags.all():
                         for bt in bad_tags:
                             if bt in t.title:
                                 print("Skip coub with 'bad' tag")
