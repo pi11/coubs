@@ -1,6 +1,12 @@
 from django.db import models
 
 
+class Tag(models.Model):
+    title = models.CharField(max_length=150, unique=True)
+
+    def __str__(self):
+        return self.title
+
 class Coub(models.Model):
     tmp_file = models.CharField(null=True, blank=True, max_length=150)
     is_downloaded = models.BooleanField(default=False)
@@ -9,8 +15,9 @@ class Coub(models.Model):
     w = models.IntegerField(default=0)
     h = models.IntegerField(default=0)
     duration = models.IntegerField(default=0)
-    
     created_at = models.DateTimeField(auto_now_add=True)
+
+    tags = models.ManyToManyField(Tag)
     
     def __str__(self):
         return str(self.pk)

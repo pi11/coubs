@@ -8,8 +8,9 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 from django.db.models import Q
 
-from main.models import Coub
+from main.models import Coub, Tag
 from helpers.misc import get_video_info, run_shell_command
+
 
 class Command(BaseCommand):
     help = """Parse imgur"""
@@ -37,8 +38,7 @@ class Command(BaseCommand):
             "https://coub.com/api/v2/timeline/tag/lol?order_by=likes_count&type=&scope=all&page=",
             "https://coub.com/api/v2/timeline/tag/epic?order_by=likes_count&type=&scope=all&page=",
             "https://coub.com/api/v2/timeline/tag/comedy?order_by=likes_count&type=&scope=all&page=",
-            "https://coub.com/api/v2/timeline/subscriptions/monthly?page="
-            
+            "https://coub.com/api/v2/timeline/subscriptions/monthly?page=",
         ]
         for base_url in base_urls:
             for p in range(1, 150):
@@ -51,16 +51,20 @@ class Command(BaseCommand):
                     if is_new:
                         print(f"Loading new one... id#{i}")
                         try:
-                            mp4_url = coub["file_versions"]["html5"]["video"]["higher"]["url"]
-                            mp3_url = coub["file_versions"]["html5"]["audio"]["med"]["url"]
+                            mp4_url = coub["file_versions"]["html5"]["video"]["higher"][
+                                "url"
+                            ]
+                            mp3_url = coub["file_versions"]["html5"]["audio"]["med"][
+                                "url"
+                            ]
                         except KeyError:
                             print("Looks like no audio, skipping")
                             continue
-                        
+
                         if mp4_url:
                             print(f"Downloading {mp4_url}")
                             result_mp4_file = download_file(mp4_url, i, "mp4")
-                            
+
                         print("Download mp3")
                         if mp3_url:
                             print(f"Downloading {mp3_url}")
@@ -69,9 +73,9 @@ class Command(BaseCommand):
                             result_file = f"{settings.BASE_DIR}/tmp/{i}-result.mp4"
                             print(f"Concat video + audio to {result_file}")
                             command = f"ffmpeg -i {result_mp4_file} -i {result_mp3_file} -c copy -map 0:v:0 -map 1:a:0 -shortest {result_file}"
-                            
+
                             run_shell_command(command, "Error merging video+audio")
-                            
+
                             if result_file:
                                 new_coub.is_downloaded = True
                                 new_coub.tmp_file = result_file
@@ -84,4 +88,11 @@ class Command(BaseCommand):
                             os.remove(result_mp3_file)
                     else:
                         print("Skiping old")
+                        print("Check tags")
+                        for tag in coub["tags"]:
+                            t, c = Tag.objects.get_or_create(
+                                title=tag["title"].lower().strip()
+                            )
+                            print(f"Adding tag: {t}")
+                            new_coub.tags.add(t)
                             
