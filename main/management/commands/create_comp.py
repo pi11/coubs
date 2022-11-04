@@ -40,19 +40,22 @@ class Command(BaseCommand):
 
             max_duration = 30 * 60
             total_duration = 0
-            bad_tags = ["anime", "game", "gameplay", "hentai", ]
+            bad_tags = ["anime", "game", "gameplay", "hentai", "kawaii"]
             for coub in query.order_by("?"):
+                bad_coub = False
                 if os.path.exists(coub.tmp_file):
                     for t in coub.tags:
-                        if t.title in bad_tags:
-                            print("Skip coub with 'bad' tag")
-                            
-                    total_duration += coub.duration
-                    f.write(f"file '{coub.tmp_file}'\n")
-                    coub.is_compilation_used = True
-                    coub.save()
-                    if total_duration >= max_duration:
-                        break # keep compilations short enough
+                        for bt in bad_tags:
+                            if bt in t.title:
+                                print("Skip coub with 'bad' tag")
+                                bad_coub = True
+                    if not bad_coub:
+                        total_duration += coub.duration
+                        f.write(f"file '{coub.tmp_file}'\n")
+                        coub.is_compilation_used = True
+                        coub.save()
+                        if total_duration >= max_duration:
+                            break # keep compilations short enough
 
         comp = Compilation()
         comp.save()
