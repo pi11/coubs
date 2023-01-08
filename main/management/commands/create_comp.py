@@ -22,6 +22,20 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         with open(f"{settings.BASE_DIR}/tmp/files.txt", "w+") as f:
+            bad_tags = ["anime", "game", "gameplay", "hentai", "kawaii"]
+            # Mark bad videos
+
+            for c in Coub.objects.filter(is_compilation_used=False, is_good=True):
+                bad_coub = False
+                for t in coub.tags.all():
+                    for bt in bad_tags:
+                        if bt in t.title:
+                            print(f"Skip coub with 'bad' tag: {bt}")
+                            bad_coub = True
+                if bad_coub:
+                    c.is_good = False
+                    c.save()
+
             sizes = {}
             for c in Coub.objects.filter(is_compilation_used=False):
                 size = f"{c.w}x{c.h}"
@@ -40,7 +54,6 @@ class Command(BaseCommand):
 
             max_duration = 30 * 60
             total_duration = 0
-            bad_tags = ["anime", "game", "gameplay", "hentai", "kawaii"]
             for coub in query.order_by("?"):
                 bad_coub = False
                 if os.path.exists(coub.tmp_file):
@@ -55,7 +68,7 @@ class Command(BaseCommand):
                         coub.is_compilation_used = True
                         coub.save()
                         if total_duration >= max_duration:
-                            break # keep compilations short enough
+                            break  # keep compilations short enough
 
         comp = Compilation()
         comp.save()

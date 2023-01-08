@@ -18,6 +18,8 @@ class Coub(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     tags = models.ManyToManyField(Tag)
+    is_good = models.BooleanField(default=True)
+    
     
     def __str__(self):
         return str(self.pk)
