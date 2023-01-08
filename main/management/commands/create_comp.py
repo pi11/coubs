@@ -33,8 +33,8 @@ class Command(BaseCommand):
                             print(f"Skip coub with 'bad' tag: {bt}")
                             bad_coub = True
                 if bad_coub:
-                    c.is_good = False
-                    c.save()
+                    coub.is_good = False
+                    coub.save()
 
             sizes = {}
             for c in Coub.objects.filter(is_compilation_used=False):
