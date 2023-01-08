@@ -25,7 +25,7 @@ class Command(BaseCommand):
             bad_tags = ["anime", "game", "gameplay", "hentai", "kawaii"]
             # Mark bad videos
 
-            for c in Coub.objects.filter(is_compilation_used=False, is_good=True):
+            for coub in Coub.objects.filter(is_compilation_used=False, is_good=True):
                 bad_coub = False
                 for t in coub.tags.all():
                     for bt in bad_tags:
