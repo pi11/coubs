@@ -37,7 +37,7 @@ class Command(BaseCommand):
                     coub.save()
 
             sizes = {}
-            for c in Coub.objects.filter(is_compilation_used=False):
+            for c in Coub.objects.filter(is_compilation_used=False, is_good=True):
                 size = f"{c.w}x{c.h}"
                 if size not in sizes:
                     sizes[size] = 1
@@ -46,7 +46,8 @@ class Command(BaseCommand):
             max_s = (max(sizes, key=sizes.get)).split("x")
 
             query = Coub.objects.filter(
-                is_compilation_used=False, is_downloaded=True, w=max_s[0], h=max_s[1]
+                is_compilation_used=False, is_downloaded=True, w=max_s[0], h=max_s[1],
+                is_good=True
             )
             if query.count() < 180:
                 print("Not enough videos")
